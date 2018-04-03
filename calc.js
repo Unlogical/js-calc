@@ -29,7 +29,11 @@ function ready(){
     number[i].addEventListener("click", function(e) {
       var currentString = input.innerHTML;
       var lastChar = currentString[currentString.length - 1];
-      if (!resultDisplayed) {
+      if (e.target.innerHTML == ".") {
+        if (currentString.length == 0 || currentString.length == 1 && lastChar == "√"){
+          console.log("enter a number first");
+        }
+      }else if (!resultDisplayed) {
         input.innerHTML += e.target.innerHTML;
       } else if (resultDisplayed  && isBinaryOperator(lastChar)) {
         resultDisplayed = false;
@@ -136,15 +140,11 @@ function ready(){
         performOperation(operators[i]);
       }
     }
-    // performOperation("²");
-    // performOperation("√");
     performOperation("÷");
     performOperation("×");
     while (operators.length > 0) {
       performOperation(operators[0]);
     }
-    // performOperation("+");
-    // performOperation("-");
     input.innerHTML = numbers[0]; 
     resultDisplayed = true; 
   });
