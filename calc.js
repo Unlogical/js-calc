@@ -30,8 +30,10 @@ function ready(){
       var currentString = input.innerHTML;
       var lastChar = currentString[currentString.length - 1];
       if (e.target.innerHTML == ".") {
-        if (currentString.length == 0 || currentString.length == 1 && lastChar == "√"){
+        if (currentString.length == 0 || lastChar == "√"){
           console.log("enter a number first");
+        } else {
+          input.innerHTML += e.target.innerHTML;
         }
       }else if (!resultDisplayed) {
         input.innerHTML += e.target.innerHTML;
