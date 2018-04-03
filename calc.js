@@ -17,6 +17,13 @@ function ready(){
     }
     return false;
   }
+  function isUnaryOperator(character) {
+    if (character == "²" || character == "√") {
+      return true;
+    }
+    return false;
+  }
+
 
   for (var i = 0; i < number.length; i++) {
     number[i].addEventListener("click", function(e) {
@@ -40,13 +47,30 @@ function ready(){
     operator[i].addEventListener("click", function(e) {
       var currentString = input.innerHTML;
       var lastChar = currentString[currentString.length - 1];
-      if (isBinaryOperator(lastChar)) {
-        var newString = currentString.substring(0, currentString.length - 1) + e.target.innerHTML;
-        input.innerHTML = newString;
-      } else if (currentString.length == 0) {
-        console.log("enter a number first");
-      } else {
-        input.innerHTML += e.target.innerHTML;
+      if (isBinaryOperator(e.target.innerHTML)) {
+        if (isBinaryOperator(lastChar) || lastChar == "√") {
+          var newString = currentString.substring(0, currentString.length - 1) + e.target.innerHTML;
+          input.innerHTML = newString;
+        } else if (currentString.length == 0) {
+          console.log("enter a number first");
+        } else {
+          input.innerHTML += e.target.innerHTML;
+        }      
+      } else if (e.target.innerHTML == "x²") {
+          if (currentString.length == 0 || isUnaryOperator(lastChar) || isBinaryOperator(lastChar)) {
+            console.log("enter a number first");
+        } else if (isBinaryOperator(lastChar) || lastChar == "√") {
+           var newString = currentString.substring(0, currentString.length - 1) + "²";
+          input.innerHTML = newString; 
+        } else {
+          input.innerHTML += "²"
+        }
+      } else if (e.target.innerHTML == "√") {
+        if (currentString.length == 0 || isBinaryOperator(lastChar)) {
+          input.innerHTML += e.target.innerHTML;
+        } else {
+          console.log("it must be before number");  
+        }
       }
 
     });
@@ -54,68 +78,73 @@ function ready(){
 
   function binaryOperation(a,b, operation){
     a = parseFloat(a);
-    b = parseFloat(b);
-    if (operation == "÷") {
-      return a/b;
+    if (!b) {
+      return a;
+    } else {
+      b = parseFloat(b);
+      if (operation == "÷") {
+        return a/b;
+      }
+      if (operation == "×") {
+        return a*b;
+      }
+      if (operation == "+") {
+        return a+b;
+      }
+      if (operation == "-") {
+        return a-b;
+      }
     }
-    if (operation == "×") {
-      return a*b;
-    }
-    if (operation == "+") {
-      return a+b;
-    }
-    if (operation == "-") {
-      return a-b;
+  }
+
+  function unaryOperation(a, operation) {
+    a = parseFloat(a);
+    if (operation == "²") {
+        return Math.pow(a, 2);
+      }
+    if (operation == "√") {
+        return Math.sqrt(a);
     }
   }
 
   result.addEventListener("click", function() {
-    var inputString = input.innerHTML;
-    var numbers = inputString.split(/\+|\-|\×|\÷/g);
-    var operators = inputString.replace(/[0-9]|\./g, "").split("");
     function performOperation(operation) {
       var operatorIndex = operators.indexOf(operation);
       while (operatorIndex != -1) {
         if (isBinaryOperator(operation)){
-          var calculated = binaryOperation(numbers[operatorIndex],numbers[operatorIndex + 1], operation)
+          var calculated = binaryOperation(numbers[operatorIndex],numbers[operatorIndex + 1], operation);
           numbers.splice(operatorIndex, 2, calculated);
+        } else {
+          var calculated = unaryOperation(numbers[operatorIndex], operation);
+          numbers.splice(operatorIndex, 1, calculated);
         }
         operators.splice(operatorIndex, 1);   
         operatorIndex = operators.indexOf(operation);
       } 
     }
+
+    var inputString = input.innerHTML;
+    var numbers = inputString.split(/\+|\-|\×|\÷|\√|\²/g);
+    var operators = inputString.replace(/[0-9]|\./g, "").split("");
+    for (i = 0; i < numbers.length; i++){
+      while (numbers[i] == "") {
+        numbers.splice(i, 1);
+      }
+    }
+    for (i = 0; i < operators.length; i++) {
+      if (isUnaryOperator(operators[i])) {
+        performOperation(operators[i]);
+      }
+    }
+    // performOperation("²");
+    // performOperation("√");
     performOperation("÷");
     performOperation("×");
-    performOperation("+");
-    performOperation("-");
-    // var divide = operators.indexOf("÷");
-    // while (divide != -1) {
-    //   numbers.splice(divide, 2, numbers[divide] / numbers[divide + 1]);
-    //   operators.splice(divide, 1);
-    //   divide = operators.indexOf("÷");
-    // }
-
-    // var multiply = operators.indexOf("×");
-    // while (multiply != -1) {
-    //   numbers.splice(multiply, 2, numbers[multiply] * numbers[multiply + 1]);
-    //   operators.splice(multiply, 1);
-    //   multiply = operators.indexOf("×");
-    // }
-
-    // var subtract = operators.indexOf("-");
-    // while (subtract != -1) {
-    //   numbers.splice(subtract, 2, numbers[subtract] - numbers[subtract + 1]);
-    //   operators.splice(subtract, 1);
-    //   subtract = operators.indexOf("-");
-    // }
-
-    // var add = operators.indexOf("+");
-    // while (add != -1) {
-    //   numbers.splice(add, 2, parseFloat(numbers[add]) + parseFloat(numbers[add + 1]));
-    //   operators.splice(add, 1);
-    //   add = operators.indexOf("+");
-    // }
-
+    while (operators.length > 0) {
+      performOperation(operators[0]);
+    }
+    // performOperation("+");
+    // performOperation("-");
     input.innerHTML = numbers[0]; 
     resultDisplayed = true; 
   });
