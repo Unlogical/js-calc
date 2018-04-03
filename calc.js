@@ -11,13 +11,20 @@ function ready(){
     resultDisplayed = false; 
 
 
+  function isBinaryOperator(character) {
+    if (character == "+" || character == "-" || character == "×" || character == "÷") {
+      return true;
+    }
+    return false;
+  }
+
   for (var i = 0; i < number.length; i++) {
     number[i].addEventListener("click", function(e) {
       var currentString = input.innerHTML;
       var lastChar = currentString[currentString.length - 1];
-      if (resultDisplayed === false) {
+      if (!resultDisplayed) {
         input.innerHTML += e.target.innerHTML;
-      } else if (resultDisplayed === true && lastChar === "+" || lastChar === "-" || lastChar === "×" || lastChar === "÷") {
+      } else if (resultDisplayed  && isBinaryOperator(lastChar)) {
         resultDisplayed = false;
         input.innerHTML += e.target.innerHTML;
       } else {
@@ -33,7 +40,7 @@ function ready(){
     operator[i].addEventListener("click", function(e) {
       var currentString = input.innerHTML;
       var lastChar = currentString[currentString.length - 1];
-      if (lastChar === "+" || lastChar === "-" || lastChar === "×" || lastChar === "÷") {
+      if (isBinaryOperator(lastChar)) {
         var newString = currentString.substring(0, currentString.length - 1) + e.target.innerHTML;
         input.innerHTML = newString;
       } else if (currentString.length == 0) {
@@ -45,39 +52,69 @@ function ready(){
     });
   }
 
+  function binaryOperation(a,b, operation){
+    a = parseFloat(a);
+    b = parseFloat(b);
+    if (operation == "÷") {
+      return a/b;
+    }
+    if (operation == "×") {
+      return a*b;
+    }
+    if (operation == "+") {
+      return a+b;
+    }
+    if (operation == "-") {
+      return a-b;
+    }
+  }
 
   result.addEventListener("click", function() {
     var inputString = input.innerHTML;
     var numbers = inputString.split(/\+|\-|\×|\÷/g);
     var operators = inputString.replace(/[0-9]|\./g, "").split("");
-
-    var divide = operators.indexOf("÷");
-    while (divide != -1) {
-      numbers.splice(divide, 2, numbers[divide] / numbers[divide + 1]);
-      operators.splice(divide, 1);
-      divide = operators.indexOf("÷");
+    function performOperation(operation) {
+      var operatorIndex = operators.indexOf(operation);
+      while (operatorIndex != -1) {
+        if (isBinaryOperator(operation)){
+          var calculated = binaryOperation(numbers[operatorIndex],numbers[operatorIndex + 1], operation)
+          numbers.splice(operatorIndex, 2, calculated);
+        }
+        operators.splice(operatorIndex, 1);   
+        operatorIndex = operators.indexOf(operation);
+      } 
     }
+    performOperation("÷");
+    performOperation("×");
+    performOperation("+");
+    performOperation("-");
+    // var divide = operators.indexOf("÷");
+    // while (divide != -1) {
+    //   numbers.splice(divide, 2, numbers[divide] / numbers[divide + 1]);
+    //   operators.splice(divide, 1);
+    //   divide = operators.indexOf("÷");
+    // }
 
-    var multiply = operators.indexOf("×");
-    while (multiply != -1) {
-      numbers.splice(multiply, 2, numbers[multiply] * numbers[multiply + 1]);
-      operators.splice(multiply, 1);
-      multiply = operators.indexOf("×");
-    }
+    // var multiply = operators.indexOf("×");
+    // while (multiply != -1) {
+    //   numbers.splice(multiply, 2, numbers[multiply] * numbers[multiply + 1]);
+    //   operators.splice(multiply, 1);
+    //   multiply = operators.indexOf("×");
+    // }
 
-    var subtract = operators.indexOf("-");
-    while (subtract != -1) {
-      numbers.splice(subtract, 2, numbers[subtract] - numbers[subtract + 1]);
-      operators.splice(subtract, 1);
-      subtract = operators.indexOf("-");
-    }
+    // var subtract = operators.indexOf("-");
+    // while (subtract != -1) {
+    //   numbers.splice(subtract, 2, numbers[subtract] - numbers[subtract + 1]);
+    //   operators.splice(subtract, 1);
+    //   subtract = operators.indexOf("-");
+    // }
 
-    var add = operators.indexOf("+");
-    while (add != -1) {
-      numbers.splice(add, 2, parseFloat(numbers[add]) + parseFloat(numbers[add + 1]));
-      operators.splice(add, 1);
-      add = operators.indexOf("+");
-    }
+    // var add = operators.indexOf("+");
+    // while (add != -1) {
+    //   numbers.splice(add, 2, parseFloat(numbers[add]) + parseFloat(numbers[add + 1]));
+    //   operators.splice(add, 1);
+    //   add = operators.indexOf("+");
+    // }
 
     input.innerHTML = numbers[0]; 
     resultDisplayed = true; 
