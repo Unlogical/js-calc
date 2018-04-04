@@ -114,7 +114,8 @@ function ready(){
       return a;
     } else {
       b = parseFloat(b);
-      if (operation == "÷") {
+      switch (operation) {
+        case "÷": {
         if (b == 0) {
           console.log("division by zero")
           if (a == 0) {
@@ -125,25 +126,18 @@ function ready(){
         }
         return a/b;
       }
-      if (operation == "×") {
-        return a*b;
-      }
-      if (operation == "+") {
-        return a+b;
-      }
-      if (operation == "-") {
-        return a-b;
+      case "×": return a*b;
+      case "+": return a+b;
+      case "-": return a-b;
       }
     }
   }
 
   function unaryOperation(a, operation) {
     a = parseFloat(a);
-    if (operation == "²") {
-        return Math.pow(a, 2);
-      }
-    if (operation == "√") {
-        return Math.sqrt(a);
+    switch (operation) {
+      case "²": return Math.pow(a, 2);
+      case "√": return Math.sqrt(a);
     }
   }
 
