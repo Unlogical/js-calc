@@ -54,7 +54,9 @@ function ready(){
           console.log("enter a number first");
         } else if (currentString.length == 0 || lastChar == "√" || isBinaryOperator(lastChar)) {
             input.innerHTML += "0."
+            resultDisplayed = false;
         } else {
+          resultDisplayed = false;
           input.innerHTML += e.target.innerHTML;
         }
       } else if (!resultDisplayed) {
