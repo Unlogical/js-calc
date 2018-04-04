@@ -34,17 +34,28 @@ function ready(){
     return true;
   }
 
+  function changeFontSize(currentString){
+    if (currentString.length >= 15) {
+        input.style.fontSize = "0.9rem";
+      } else if (currentString.length >= 10) {
+        input.style.fontSize = "1.5rem";
+      } else {
+        input.style.fontSize = "2.5rem";
+      }
+  }
+
   for (var i = 0; i < number.length; i++) {
     number[i].addEventListener("click", function(e) {
       var currentString = input.innerHTML;
       var lastChar = currentString[currentString.length - 1];
+      changeFontSize(currentString);
       if (e.target.innerHTML == ".") {
         if (currentString.length == 0 || lastChar == "√" || lastChar == "." || hasPoint(currentString)){
           console.log("enter a number first");
         } else {
           input.innerHTML += e.target.innerHTML;
         }
-      }else if (!resultDisplayed) {
+      } else if (!resultDisplayed) {
         input.innerHTML += e.target.innerHTML;
       } else if (resultDisplayed  && isBinaryOperator(lastChar)) {
         resultDisplayed = false;
@@ -62,6 +73,7 @@ function ready(){
     operator[i].addEventListener("click", function(e) {
       var currentString = input.innerHTML;
       var lastChar = currentString[currentString.length - 1];
+      changeFontSize(currentString);
       if (isBinaryOperator(e.target.innerHTML)) {
         if (isBinaryOperator(lastChar) || lastChar == "√" && currentString.length > 1) {
           var newString = currentString.substring(0, currentString.length - 1) + e.target.innerHTML;
@@ -166,7 +178,12 @@ function ready(){
       while (operators.length > 0) {
         performOperation(operators[0]);
       }
-      input.innerHTML = numbers[0]; 
+      changeFontSize(String(numbers[0]));
+      if (isNaN(numbers[0])) {
+        input.innerHTML = "&infin;"
+      } else {
+        input.innerHTML = numbers[0]; 
+      }
       resultDisplayed = true; 
     }
   });
