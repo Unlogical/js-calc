@@ -47,28 +47,29 @@ function ready(){
   for (var i = 0; i < number.length; i++) {
     number[i].addEventListener("click", function(e) {
       var currentString = input.innerHTML;
+      var newString = currentString;
       var lastChar = currentString[currentString.length - 1];
-      changeFontSize(currentString);
       if (e.target.innerHTML == ".") {
         if (lastChar == "." || lastChar == "∞" || hasPoint(currentString) || lastChar == "²"){
           console.log("enter a number first");
         } else if (currentString.length == 0 || lastChar == "√" || isBinaryOperator(lastChar)) {
-            input.innerHTML += "0."
+            newString += "0."
             resultDisplayed = false;
         } else {
           resultDisplayed = false;
-          input.innerHTML += e.target.innerHTML;
+          newString += e.target.innerHTML;
         }
       } else if (!resultDisplayed) {
-        input.innerHTML += e.target.innerHTML;
+        newString += e.target.innerHTML;
       } else if (resultDisplayed  && isBinaryOperator(lastChar)) {
         resultDisplayed = false;
-        input.innerHTML += e.target.innerHTML;
+        newString += e.target.innerHTML;
       } else {
         resultDisplayed = false;
-        input.innerHTML = "";
-        input.innerHTML += e.target.innerHTML;
+        newString = e.target.innerHTML;
       }
+      changeFontSize(newString);
+      input.innerHTML = newString;
     });
   }
 
