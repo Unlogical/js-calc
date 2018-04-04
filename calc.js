@@ -12,14 +12,28 @@ function ready(){
 
 
   function isBinaryOperator(character) {
-    if (character == "+" || character == "-" || character == "×" || character == "÷") {
+    if (character == "+" || character == "×" || character == "÷") {
       return true;
+    } 
+    if (character == "-") {
+      var currentString = input.innerHTML;
+      var lastChar = currentString[currentString.length - 1];
+      if (lastChar != "÷" && lastChar != "×" && currentString.length != 0) {
+        return true;
+      }
     }
     return false;
   }
   function isUnaryOperator(character) {
-    if (character == "²" || character == "√") {
+    if (character == "²" || character == "√" ) {
       return true;
+    }
+    if (character == "-") {
+      var currentString = input.innerHTML;
+      var lastChar = currentString[currentString.length - 1];
+      if (lastChar == "÷" || lastChar == "×" || currentString.length == 0) {
+        return true;
+      }
     }
     return false;
   }
@@ -80,7 +94,7 @@ function ready(){
         if (isBinaryOperator(lastChar)) {
           var newString = currentString.substring(0, currentString.length - 1) + e.target.innerHTML;
           input.innerHTML = newString;
-        } else if (currentString.length == 0 || lastChar == "√" || lastChar == ".") {
+        } else if (lastChar == "√" || lastChar == ".") {
           console.log("enter a number first");
         } else {
           input.innerHTML += e.target.innerHTML;
@@ -95,16 +109,17 @@ function ready(){
           input.innerHTML += "²"
         }
       } else if (e.target.innerHTML == "√") {
-        if (currentString.length == 0 || isBinaryOperator(lastChar)) {
-          input.innerHTML += e.target.innerHTML;
-        } else if (resultDisplayed == true) {
-            resultDisplayed = false;
-            input.innerHTML = "√";
+          if (currentString.length == 0 || isBinaryOperator(lastChar)) {
+            input.innerHTML += e.target.innerHTML;
+          } else if (resultDisplayed == true) {
+              resultDisplayed = false;
+              input.innerHTML = "√";
           } else {
-          console.log("it must be before number");  
-        }
+            console.log("it must be before number");  
+          }
+      } else if (e.target.innerHTML == "-") {
+          input.innerHTML += "-";
       }
-
     });
   }
 
@@ -116,20 +131,28 @@ function ready(){
       b = parseFloat(b);
       switch (operation) {
         case "÷": {
-        if (b == 0) {
-          console.log("division by zero")
-          if (a == 0) {
-            return "";
-          } else {
-            return "&infin;"
+          if (b == 0) {
+            console.log("division by zero")
+            if (a == 0) {
+              return "";
+            } else {
+              return "&infin;"
+            }
           }
-        }
         return a/b;
-      }
-      case "×": return a*b;
-      case "+": return a+b;
-      case "-": return a-b;
-      }
+        }
+        case "×": return a*b;
+        case "+": return a+b;
+        case "-": {
+          if (typeof b == undefined || isNaN(b)) {
+            return (0-a);
+          }
+          if (typeof a == undefined || isNaN(a)) {
+            return (0-b);
+          }
+          return a-b;
+        }
+      } 
     }
   }
 
