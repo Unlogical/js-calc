@@ -25,12 +25,21 @@ function ready(){
   }
 
 
+  function hasPoint(currentString) {
+    var numbers = currentString.split(/\+|\-|\×|\÷|\√|\²/g);
+    var number = numbers[numbers.length - 1];
+    if (number.indexOf(".") == -1) {
+      return false;
+    } 
+    return true;
+  }
+
   for (var i = 0; i < number.length; i++) {
     number[i].addEventListener("click", function(e) {
       var currentString = input.innerHTML;
       var lastChar = currentString[currentString.length - 1];
       if (e.target.innerHTML == ".") {
-        if (currentString.length == 0 || lastChar == "√"){
+        if (currentString.length == 0 || lastChar == "√" || lastChar == "." || hasPoint(currentString)){
           console.log("enter a number first");
         } else {
           input.innerHTML += e.target.innerHTML;
@@ -54,10 +63,10 @@ function ready(){
       var currentString = input.innerHTML;
       var lastChar = currentString[currentString.length - 1];
       if (isBinaryOperator(e.target.innerHTML)) {
-        if (isBinaryOperator(lastChar) || lastChar == "√") {
+        if (isBinaryOperator(lastChar) || lastChar == "√" && currentString.length > 1) {
           var newString = currentString.substring(0, currentString.length - 1) + e.target.innerHTML;
           input.innerHTML = newString;
-        } else if (currentString.length == 0) {
+        } else if (currentString.length == 0 || currentString == "√") {
           console.log("enter a number first");
         } else {
           input.innerHTML += e.target.innerHTML;
@@ -74,7 +83,10 @@ function ready(){
       } else if (e.target.innerHTML == "√") {
         if (currentString.length == 0 || isBinaryOperator(lastChar)) {
           input.innerHTML += e.target.innerHTML;
-        } else {
+        } else if (resultDisplayed == true) {
+            resultDisplayed = false;
+            input.innerHTML = "√";
+          } else {
           console.log("it must be before number");  
         }
       }
@@ -89,6 +101,10 @@ function ready(){
     } else {
       b = parseFloat(b);
       if (operation == "÷") {
+        if (b == 0) {
+          console.log("division by zero")
+          return "";
+        }
         return a/b;
       }
       if (operation == "×") {
@@ -130,25 +146,29 @@ function ready(){
     }
 
     var inputString = input.innerHTML;
-    var numbers = inputString.split(/\+|\-|\×|\÷|\√|\²/g);
-    var operators = inputString.replace(/[0-9]|\./g, "").split("");
-    for (i = 0; i < numbers.length; i++){
-      while (numbers[i] == "") {
-        numbers.splice(i, 1);
+    if (inputString.length == 0 || inputString == "√") {
+      input.innerHTML = "";
+    } else {
+      var numbers = inputString.split(/\+|\-|\×|\÷|\√|\²/g);
+      var operators = inputString.replace(/[0-9]|\./g, "").split("");
+      for (i = 0; i < numbers.length; i++){
+        while (numbers[i] == "") {
+          numbers.splice(i, 1);
+        }
       }
-    }
-    for (i = 0; i < operators.length; i++) {
-      if (isUnaryOperator(operators[i])) {
-        performOperation(operators[i]);
+      for (i = 0; i < operators.length; i++) {
+        if (isUnaryOperator(operators[i])) {
+          performOperation(operators[i]);
+        }
       }
+      performOperation("÷");
+      performOperation("×");
+      while (operators.length > 0) {
+        performOperation(operators[0]);
+      }
+      input.innerHTML = numbers[0]; 
+      resultDisplayed = true; 
     }
-    performOperation("÷");
-    performOperation("×");
-    while (operators.length > 0) {
-      performOperation(operators[0]);
-    }
-    input.innerHTML = numbers[0]; 
-    resultDisplayed = true; 
   });
 
   clear.addEventListener("click", function() {
