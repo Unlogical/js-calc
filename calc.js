@@ -50,7 +50,7 @@ function ready(){
       var lastChar = currentString[currentString.length - 1];
       changeFontSize(currentString);
       if (e.target.innerHTML == ".") {
-        if (lastChar == "." || lastChar == "∞" || hasPoint(currentString)){
+        if (lastChar == "." || lastChar == "∞" || hasPoint(currentString) || lastChar == "²"){
           console.log("enter a number first");
         } else if (currentString.length == 0 || lastChar == "√" || isBinaryOperator(lastChar)) {
             input.innerHTML += "0."
