@@ -54,21 +54,18 @@ function ready(){
           console.log("enter a number first");
         } else if (currentString.length == 0 || lastChar == "√" || isBinaryOperator(lastChar)) {
             newString += "0."
-            resultDisplayed = false;
         } else {
-          resultDisplayed = false;
           newString += e.target.innerHTML;
         }
-      } else if (!resultDisplayed) {
+      } else if (lastChar == "²") {
+         console.log("enter a operator first"); 
+      } else if (!resultDisplayed || resultDisplayed  && isBinaryOperator(lastChar)) {
         newString += e.target.innerHTML;
-      } else if (resultDisplayed  && isBinaryOperator(lastChar)) {
-        resultDisplayed = false;
-        newString += e.target.innerHTML;
-      } else {
-        resultDisplayed = false;
+      } else{
         newString = e.target.innerHTML;
       }
       changeFontSize(newString);
+      resultDisplayed = false;
       input.innerHTML = newString;
     });
   }
