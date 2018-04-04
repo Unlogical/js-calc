@@ -86,7 +86,7 @@ function ready(){
           input.innerHTML += e.target.innerHTML;
         }      
       } else if (e.target.innerHTML == "x²") {
-          if (currentString.length == 0 || isUnaryOperator(lastChar) || isBinaryOperator(lastChar)) {
+          if (currentString.length == 0 || isUnaryOperator(lastChar) || isBinaryOperator(lastChar) || lastChar == ".") {
             console.log("enter a number first");
         } else if (isBinaryOperator(lastChar) || lastChar == "√") {
            var newString = currentString.substring(0, currentString.length - 1) + "²";
