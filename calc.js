@@ -15,9 +15,10 @@ function ready(){
     if (character == "+" || character == "×" || character == "÷") {
       return true;
     } 
-    if (character == "-") {
+    if (character == "-") { // !!!!!!!!!!!!!!!!!!
       var currentString = input.innerHTML;
       var lastChar = currentString[currentString.length - 1];
+      var firstChar = currentString[0];
       if (lastChar != "÷" && lastChar != "×" && currentString.length != 0) {
         return true;
       }
@@ -28,7 +29,7 @@ function ready(){
     if (character == "²" || character == "√" ) {
       return true;
     }
-    if (character == "-") {
+    if (character == "-") { // !!!!!!!!!!!!!!!!!!!!!!!!
       var currentString = input.innerHTML;
       var lastChar = currentString[currentString.length - 1];
       if (lastChar == "÷" || lastChar == "×" || currentString.length == 0) {
@@ -110,7 +111,7 @@ function ready(){
         }
       } else if (e.target.innerHTML == "√") {
           if (currentString.length == 0 || isBinaryOperator(lastChar)) {
-            input.innerHTML += e.target.innerHTML;
+            input.innerHTML += "√";
           } else if (resultDisplayed == true) {
               resultDisplayed = false;
               input.innerHTML = "√";
@@ -161,6 +162,7 @@ function ready(){
     switch (operation) {
       case "²": return Math.pow(a, 2);
       case "√": return Math.sqrt(a);
+      case "~": return -a;
     }
   }
 
@@ -186,6 +188,14 @@ function ready(){
     } else {
       var numbers = inputString.split(/\+|\-|\×|\÷|\√|\²/g);
       var operators = inputString.replace(/[0-9]|\./g, "").split("");
+      if (inputString[0] == "-") {
+        operators[0] = "~";
+      }
+      for (i = 1; i < operators.length; i++) {
+        if (operators[i] == "-" && operators[i-1] == "÷" || operators[i-1] == "×") {
+          operators[i] = "~";
+        }
+      }
       for (i = 0; i < numbers.length; i++){
         while (numbers[i] == "") {
           numbers.splice(i, 1);
