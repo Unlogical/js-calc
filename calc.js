@@ -50,8 +50,10 @@ function ready(){
       var lastChar = currentString[currentString.length - 1];
       changeFontSize(currentString);
       if (e.target.innerHTML == ".") {
-        if (currentString.length == 0 || lastChar == "√" || lastChar == "." || hasPoint(currentString)){
+        if (lastChar == "." || lastChar == "∞" || hasPoint(currentString)){
           console.log("enter a number first");
+        } else if (currentString.length == 0 || lastChar == "√" || isBinaryOperator(lastChar)) {
+            input.innerHTML += "0."
         } else {
           input.innerHTML += e.target.innerHTML;
         }
@@ -75,10 +77,10 @@ function ready(){
       var lastChar = currentString[currentString.length - 1];
       changeFontSize(currentString);
       if (isBinaryOperator(e.target.innerHTML)) {
-        if (isBinaryOperator(lastChar) || lastChar == "√" && currentString.length > 1) {
+        if (isBinaryOperator(lastChar)) {
           var newString = currentString.substring(0, currentString.length - 1) + e.target.innerHTML;
           input.innerHTML = newString;
-        } else if (currentString.length == 0 || currentString == "√") {
+        } else if (currentString.length == 0 || lastChar == "√" || lastChar == ".") {
           console.log("enter a number first");
         } else {
           input.innerHTML += e.target.innerHTML;
@@ -115,7 +117,11 @@ function ready(){
       if (operation == "÷") {
         if (b == 0) {
           console.log("division by zero")
-          return "";
+          if (a == 0) {
+            return "";
+          } else {
+            return "&infin;"
+          }
         }
         return a/b;
       }
@@ -182,7 +188,7 @@ function ready(){
       if (isNaN(numbers[0])) {
         input.innerHTML = "&infin;"
       } else {
-        input.innerHTML = numbers[0]; 
+        input.innerHTML = parseFloat(numbers[0]); 
       }
       resultDisplayed = true; 
     }
