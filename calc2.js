@@ -104,8 +104,10 @@ function ready(){
      		newString = currentString;
       		var lastChar = currentString[currentString.length - 1];
     		if (isPossible(number, currentString)) {
+    			changeFontSize(input, currentString+number);
     			add(number);
     		} else if (number == "." && isEmptyLike(currentString)){
+    			changeFontSize(input, currentString+"0.");
     			add("0.");
     		}
     	})
@@ -117,12 +119,14 @@ function ready(){
     		var currentString = input.innerHTML;
       		var lastChar = currentString[currentString.length - 1];
       		if(isPossible(operator, currentString)) {
+      			changeFontSize(input, currentString+operator);
       			add(operator);
       		} else if (isBinaryOperator(operator) && isBinaryOperator(lastChar) && !hasLastUnMinus(currentString)
       			|| isUnaryPostOperator(operator) && ((isUnaryPostOperator(lastChar)) || lastChar == "²" || lastChar == "³")) {
       			currentString = currentString.substring(0, currentString.length - 1);
       			newString = currentString;
       			input.innerHTML = currentString;
+      			changeFontSize(input, currentString+operator);
       			add(operator);
       		}
     	})
