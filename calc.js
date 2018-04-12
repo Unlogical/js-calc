@@ -191,21 +191,19 @@ function ready(){
       if (inputString[0] == "-") {
         operators[0] = "~";
       }
-      for (i = 1; i < operators.length; i++) {
+      for (var i = 1; i < operators.length; i++) {
         if (operators[i] == "-" && operators[i-1] == "÷" || operators[i-1] == "×") {
           operators[i] = "~";
         }
       }
-      for (i = 0; i < numbers.length; i++){
+      for (var i = 0; i < numbers.length; i++){
         while (numbers[i] == "") {
           numbers.splice(i, 1);
         }
       }
-      for (i = 0; i < operators.length; i++) {
-        if (isUnaryOperator(operators[i])) {
-          performOperation(operators[i]);
-        }
-      }
+      performOperation("√");
+      performOperation("~");
+      performOperation("²");
       performOperation("÷");
       performOperation("×");
       while (operators.length > 0) {
