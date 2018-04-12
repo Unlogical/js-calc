@@ -13,7 +13,7 @@ function isUnaryPreOperator(character) {
 }
 
 function isUnaryPostOperator(character) {
-	return (character == "x²" || character == "x³" || character == "!" || character == "%");
+	return (character == "²" || character == "³" || character == "!" || character == "%");
 }
 
 function isDigit(character) {
@@ -47,6 +47,19 @@ function hasLastUnMinus(currentString){
 	return (lastChar == "-" && (preLastChar === undefined || preLastChar == "("))
 }
 
+function changeMinuses(inputString) {
+	var resultString = inputString;
+	if (inputString[0] == "-") {
+		resultString[0] = "~";
+	}
+	for (var i = 0; i < inputString.length - 1; i++) {
+		if (inputString[i] == "(" && inputString[i + 1] == "-") {
+			resultString[i + 1] == "~";
+		}
+	}
+	return resultString;
+}
+
 function isPossible(character, currentString) {
 	var lastChar = currentString[currentString.length - 1];
 	if (isDigit(character)) {
@@ -75,7 +88,7 @@ function isPossible(character, currentString) {
 		return false;
 	}
 	if(character == ")") {
-		if (paranthesesFlag >= 0 && (isDigit(lastChar) || isUnaryPostOperator(lastChar) || lastChar == ")")) {
+		if (paranthesesFlag > 0 && (isDigit(lastChar) || isUnaryPostOperator(lastChar) || lastChar == ")")) {
 			paranthesesFlag--;
 			return true;
 		}
@@ -89,11 +102,9 @@ function ready(){
     result = document.getElementById('result'), 
     clear = document.getElementById('clear'), 
     numbers = document.querySelectorAll('.numbers div'),
-    operators = document.querySelectorAll('.operators div'), 
-	newString = "";
+    operators = document.querySelectorAll('.operators div');
 
     function add(str) {
-		str = str.replace("x", "");
 		input.innerHTML += str;
     }
 
@@ -101,7 +112,6 @@ function ready(){
     	numbers[i].addEventListener("click", function(e){
     		var number = e.target.innerHTML;
     		var currentString = input.innerHTML;
-     		newString = currentString;
       		var lastChar = currentString[currentString.length - 1];
     		if (isPossible(number, currentString)) {
     			changeFontSize(input, currentString+number);
@@ -116,6 +126,7 @@ function ready(){
     for (var i =0; i < operators.length; i++){
     	operators[i].addEventListener("click", function(e){
     		var operator = e.target.innerHTML;
+    		operator = operator.replace("x", "");
     		var currentString = input.innerHTML;
       		var lastChar = currentString[currentString.length - 1];
       		if(isPossible(operator, currentString)) {
@@ -124,7 +135,6 @@ function ready(){
       		} else if (isBinaryOperator(operator) && isBinaryOperator(lastChar) && !hasLastUnMinus(currentString)
       			|| isUnaryPostOperator(operator) && ((isUnaryPostOperator(lastChar)) || lastChar == "²" || lastChar == "³")) {
       			currentString = currentString.substring(0, currentString.length - 1);
-      			newString = currentString;
       			input.innerHTML = currentString;
       			changeFontSize(input, currentString+operator);
       			add(operator);
@@ -134,6 +144,13 @@ function ready(){
 
     clear.addEventListener("click", function(e) {
     	input.innerHTML = "";
+    	paranthesesFlag = 0;
     })
 
+    result.addEventListener("click", function(e) {
+    	var inputString = input.innerHTML;
+    	inputString = changeMinuses(inputString);
+    	paranthesesFlag = 0;
+    	
+    })
 }
