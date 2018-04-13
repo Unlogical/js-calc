@@ -11,6 +11,7 @@ body {
 }
 .calculator {
   width: 330px;
+  height: 420px;
   padding: 25px;
   background-color: #e0fff2;
   border-radius: 10px;
