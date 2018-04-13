@@ -66,3 +66,18 @@ describe ("changeNotation and calculate", function() {
 		assert.equal(calculate(changedNotation), 44);
 	});
 });
+
+describe ("change input string", function() {
+	it("преобразует в нормальный вид 2+(2", function() {
+		assert.equal(String(clearString("2+(2")), "2+2");
+	});
+	it("преобразует в нормальный вид 2+(2×", function() {
+		assert.equal(String(clearString("2+(2")), "2+2");
+	});
+	it("преобразует в нормальный вид 2+(2×(", function() {
+		assert.equal(String(clearString("2+(2×(")), "2+2");
+	});
+	it("преобразует в нормальный вид 2+(2×(((3", function() {
+		assert.equal(String(clearString("2+(2×(((3")), "2+2×3");
+	});
+})
