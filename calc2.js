@@ -201,13 +201,15 @@ function performBinaryOperation (a, b, operator) {
 function calculate(list) {
 	for (var i = 0; i < list.length; i++) {
 		if (isUnaryOperator(list[i])) {
-			list[i] = performUnaryOperation(list[i-1], list[i]);
+			var result = performUnaryOperation(list[i-1], list[i]);
+			list.splice(i-1, 2, result);
 		}
 		if (isBinaryOperator(list[i])) {
-			list[i] = performBinaryOperation(list[i-2], list[i-1], list[i]);
+			var result = performBinaryOperation(list[i-2], list[i-1], list[i]);
+			list.splice(i-2, 3, result);
 		}
 	}
-	return list[list.length-1];
+	return list[0];
 }
 
 
