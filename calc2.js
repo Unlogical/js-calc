@@ -68,6 +68,14 @@ function changeMinuses(inputString) {
 	return resultString;
 }
 
+function removeTrash(currentString) {
+	var lastChar = currentString[currentString.length - 1];
+	while(isBinaryOperator(lastChar) || isUnaryPreOperator(lastChar)) {
+		currentString = currentString.replace(lastChar, "");
+		lastChar = currentString[currentString.length - 1];
+	}
+	return currentString;
+}
 
 
 function isPossible(character, currentString) {
@@ -129,6 +137,10 @@ function changeNotation(currentString) {
 	for (var i = 0; i < currentString.length; i++) {
 		if (isDigit(currentString[i]) || currentString[i] == ".") {
 			number += currentString[i];
+			if(number != "" && (isOperator(currentString[i+1]) || currentString[i+1] === undefined)) {
+				output.push(parseFloat(number));
+				number = "";
+			}
 		} else if (currentString[i] == "(") {
 			stack.push(currentString[i]);
 		} else if (currentString[i] == ")") {
@@ -138,10 +150,6 @@ function changeNotation(currentString) {
 				op = stack.pop();
 			}
 		} else if(isOperator(currentString[i])) {
-			if (number != "") {
-				output.push(parseFloat(number));
-				number = "";
-			}
 			if (stack.length == 0) {
 				stack.push(currentString[i]);
 			} else if (priority(currentString[i]) > priority(stack[stack.length-1])) {
@@ -152,9 +160,6 @@ function changeNotation(currentString) {
 				stack.push(currentString[i]);
 			}
 		}
- 	}
- 	if (number != "") {
- 		output.push(number);
  	}
  	while (stack.length > 0) {
  		var op = stack.pop();
@@ -212,7 +217,8 @@ function ready(){
     result = document.getElementById('result'), 
     clear = document.getElementById('clear'), 
     numbers = document.querySelectorAll('.numbers div'),
-    operators = document.querySelectorAll('.operators div');
+    operators = document.querySelectorAll('.operators div'),
+    resultDisplayed = false; 
 
     for (var i = 0; i < numbers.length; i++) {
     	numbers[i].addEventListener("click", function(e){
@@ -220,6 +226,10 @@ function ready(){
     		var currentString = input.innerHTML;
       		var lastChar = currentString[currentString.length - 1];
     		if (isPossible(number, currentString)) {
+				if (resultDisplayed) {
+					input.innerHTML = "";
+					resultDisplayed = false;
+				}
     			changeFontSize(input, currentString+number);
     			input.innerHTML += number;
     		} else if (number == "." && isEmptyLike(currentString)){
@@ -236,6 +246,9 @@ function ready(){
     		var currentString = input.innerHTML;
       		var lastChar = currentString[currentString.length - 1];
       		if(isPossible(operator, currentString)) {
+      			if (resultDisplayed) {
+      				resultDisplayed = false;
+      			}
       			changeFontSize(input, currentString+operator);
       			input.innerHTML +=operator;
       		} else if (isBinaryOperator(operator) && isBinaryOperator(lastChar) && !hasLastUnMinus(currentString)
@@ -256,15 +269,17 @@ function ready(){
     result.addEventListener("click", function(e) {
     	var inputString = input.innerHTML;
     	inputString = changeMinuses(inputString);
+    	inputString = removeTrash(inputString);
     	paranthesesFlag = 0;
     	// var numbers = inputString.split(/\+|\-|\×|\÷|\√|\²|\³|\!|\%|\(|\)|/g);
       	var operators = inputString.replace(/[0-9]|\./g, "").split("");
       	// priorities = changePriorities(operators);
       	var output = changeNotation(inputString);
       	input.innerHTML = calculate(output);
-      	
+      	resultDisplayed = true; 
     })
 }
+
 
 
 
