@@ -92,7 +92,7 @@ function isPossible(character, currentString) {
 		return(isDigit(lastChar) || isUnaryPostOperator(lastChar) || lastChar == ")");
 	}
 	if(isUnaryPreOperator(character)) {
-		return (isEmptyLike(currentString) || isBinaryOperator(lastChar))
+		return (isEmptyLike(currentString) || isBinaryOperator(lastChar) && !(hasLastUnMinus(currentString)))
 	}
 	if(isUnaryPostOperator(character)) {
 		return (isDigit(lastChar) || lastChar == ")");
