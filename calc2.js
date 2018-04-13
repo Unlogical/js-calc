@@ -278,7 +278,9 @@ function ready(){
       	var operators = inputString.replace(/[0-9]|\./g, "").split("");
       	// priorities = changePriorities(operators);
       	var output = changeNotation(inputString);
-      	input.innerHTML = calculate(output);
+      	var res = calculate(output);
+      	changeFontSize(input, String(res));
+      	input.innerHTML = res;
       	resultDisplayed = true; 
     })
 }
