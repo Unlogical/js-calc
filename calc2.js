@@ -56,16 +56,15 @@ function hasLastUnMinus(currentString){
 }
 
 function changeMinuses(inputString) {
-	var resultString = inputString;
 	if (inputString[0] == "-") {
-		resultString[0] = "~";
+		inputString = "~" + inputString.slice(1);
 	}
 	for (var i = 0; i < inputString.length - 1; i++) {
 		if (inputString[i] == "(" && inputString[i + 1] == "-") {
-			resultString[i + 1] == "~";
+			inputString = inputString.substr(0, i+1) + "~" + inputString.slice(i+2);
 		}
 	}
-	return resultString;
+	return inputString;
 }
 
 function removeTrash(currentString) {
