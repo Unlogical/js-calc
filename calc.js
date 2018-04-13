@@ -149,15 +149,15 @@ function changeNotation(currentString) {
 				op = stack.pop();
 			}
 		} else if(isOperator(currentString[i])) {
-			if (stack.length == 0) {
-				stack.push(currentString[i]);
-			} else if (priority(currentString[i]) > priority(stack[stack.length-1])) {
+			if (stack.length == 0 || priority(currentString[i]) > priority(stack[stack.length-1])) {
 				stack.push(currentString[i]);
 			} else {
-				var op = stack.pop();
-				output.push(op);
-				stack.push(currentString[i]);
-			}
+          while (stack.length > 0 && priority(currentString[i]) <= priority(stack[stack.length-1])) {
+				    var op = stack.pop();
+				    output.push(op);
+          }
+				  stack.push(currentString[i]);
+       } 
 		}
  	}
  	while (stack.length > 0) {
