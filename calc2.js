@@ -137,7 +137,7 @@ function changeNotation(currentString) {
 	for (var i = 0; i < currentString.length; i++) {
 		if (isDigit(currentString[i]) || currentString[i] == ".") {
 			number += currentString[i];
-			if(number != "" && (isOperator(currentString[i+1]) || currentString[i+1] === undefined)) {
+			if(number != "" && (isOperator(currentString[i+1]) || currentString[i+1] === undefined || currentString[i+1] == ")")) {
 				output.push(parseFloat(number));
 				number = "";
 			}
@@ -203,10 +203,12 @@ function calculate(list) {
 		if (isUnaryOperator(list[i])) {
 			var result = performUnaryOperation(list[i-1], list[i]);
 			list.splice(i-1, 2, result);
+			i = 0;
 		}
 		if (isBinaryOperator(list[i])) {
 			var result = performBinaryOperation(list[i-2], list[i-1], list[i]);
 			list.splice(i-2, 3, result);
+			i = 0;
 		}
 	}
 	return list[0];
