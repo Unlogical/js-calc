@@ -194,7 +194,17 @@ function performBinaryOperation (a, b, operator) {
     case "+": return a + b;
     case "-": return a - b;
     case "×": return a * b;
-    case "÷": return a / b;
+    case "÷": {
+      if (b == 0) {
+        if (a == 0) {
+          console.log("unknown (0 divide by 0")
+          return "";
+        } else {
+          console.log("division by zero");
+        }
+      }
+      return a / b;
+    }
   }
 }
 function calculate(list) {
